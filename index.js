@@ -87,7 +87,7 @@ const run = async () => {
         '/login',
         passport.authenticate('local', { failureRedirect: '/login?invalid=true' }),
         (req, res) => {
-            res.redirect('/ui');
+            res.redirect('/');
         }
     );
 
