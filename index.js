@@ -56,7 +56,7 @@ const run = async () => {
     const names = process.env.QUEUE_NAMES.split(',');
 
     const serverAdapter = new ExpressAdapter();
-    serverAdapter.setBasePath('/ui');
+    serverAdapter.setBasePath('/');
 
     createBullBoard({
         queues: names.map(
@@ -79,24 +79,24 @@ const run = async () => {
     app.use(passport.initialize({}));
     app.use(passport.session({}));
 
-    app.get('/ui/login', (req, res) => {
+    app.get('/login', (req, res) => {
         res.render('login', { invalid: req.query.invalid === 'true' });
     });
 
     app.post(
-        '/ui/login',
-        passport.authenticate('local', { failureRedirect: '/ui/login?invalid=true' }),
+        '/login',
+        passport.authenticate('local', { failureRedirect: '/login?invalid=true' }),
         (req, res) => {
             res.redirect('/ui');
         }
     );
 
-    app.use('/ui', ensureLoggedIn({ redirectTo: '/ui/login' }), serverAdapter.getRouter());
+    app.use('/', ensureLoggedIn({ redirectTo: '/login' }), serverAdapter.getRouter());
 
     const port = process.env.BOARD_PORT || 3000
     app.listen(port, () => {
         console.log(`Running on ${port}...`);
-        console.log(`For the UI, open http://localhost:${port}/ui`);
+        console.log(`For the UI, open http://localhost:${port}`);
     });
 };
 
